@@ -18,12 +18,40 @@ if (isset($_GET['x']) && isset($_GET['y'])) {
     $x = $_GET['x'];
     $y = $_GET['y'];
 
-    // Выводим параметры в консоль браузера через error_log
-    error_log("Параметры x и y: $x, $y");
+    // Читаем содержимое файла points.json
+    $pointsJson = file_get_contents('points.json');
 
-    // Выводим параметры в echo
-    echo "Параметры x и y: $x, $y";
+    // Проверяем успешность чтения файла
+    if ($pointsJson === false) {
+        // Ошибка чтения файла
+        error_log("Cannot read json");
+        exit;  // Прерываем выполнение скрипта, чтобы не продолжать с некорректными данными
+    }
+
+    // Преобразуем JSON-строку в массив
+    $pointsArray = json_decode($pointsJson, true);
+
+    // Добавляем новую точку в массив
+    $newPoint = [
+        'x' => $x,
+        'y' => $y,
+        'color' => 'black', // Черный цвет (или другой по вашему усмотрению)
+    ];
+
+    $pointsArray[] = $newPoint;
+
+    // Преобразуем массив обратно в JSON-строку
+    $updatedPointsJson = json_encode($pointsArray);
+
+    // Проверяем успешность записи в файл
+    if (file_put_contents('points.json', $updatedPointsJson)) {
+        // Успешно записано
+        echo $updatedPointsJson;
+    } else {
+        // Ошибка записи в файл
+        error_log("Cannot write in json");
+    }
 } else {
     // Выводим сообщение об ошибке, если координаты не были переданы
-    echo "Ошибка: Координаты x и y не были переданы.";
+    error_log("No coord");
 }
