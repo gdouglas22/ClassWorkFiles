@@ -12,17 +12,13 @@ header('Access-Control-Allow-Credentials: true');
 // Установим заголовки, которые можно будет обрабатывать
 header('Access-Control-Allow-Headers: Authorization, Origin, X-Requested-With, Accept, X-PINGOTHER, Content-Type');
 
-// Проверяем, существует ли файл points.json
-if (!file_exists('points.json')) {
-    // Создаем файл, если он не существует
-    file_put_contents('points.json', '[]');
-}
+// Проверяем, получены ли данные в POST-запросе
+$data = json_decode(file_get_contents('php://input'), true);
 
-// Проверяем, получены ли координаты x и y в GET-параметрах
-if (isset($_GET['x']) && isset($_GET['y'])) {
-    // Получаем координаты из GET-параметров
-    $x = $_GET['x'];
-    $y = $_GET['y'];
+if (!empty($data['x']) && !empty($data['y'])) {
+    // Получаем координаты из POST-данных
+    $x = $data['x'];
+    $y = $data['y'];
 
     // Читаем содержимое файла points.json
     $pointsJson = file_get_contents('points.json');
@@ -58,6 +54,6 @@ if (isset($_GET['x']) && isset($_GET['y'])) {
         echo "Ошибка записи в файл points.json.";
     }
 } else {
-    // Выводим сообщение об ошибке, если координаты не были переданы
-    echo "Ошибка: Координаты x и y не были переданы.";
+    // Выводим сообщение об ошибке, если данные не были переданы
+    echo "Ошибка: Данные не были переданы.";
 }
