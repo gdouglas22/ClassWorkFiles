@@ -35,7 +35,7 @@ if (isset($_GET['x']) && isset($_GET['y'])) {
     $newPoint = [
         'x' => $x,
         'y' => $y,
-        'color' => 'black', // Черный цвет (или другой по вашему усмотрению)
+        'color' => 'black', // Черный цвет (или любой другой)
     ];
 
     $pointsArray[] = $newPoint;
